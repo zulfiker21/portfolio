@@ -24,7 +24,7 @@
                  @endif
 
 
-                 <div class="row">                    
+                 <div class="row">
                      <div class="form-group col-md-4 mt-3">
                          <div class="mb-3">
                              <label for="title">
@@ -56,10 +56,10 @@
                                  <div class="text-danger small mt-1">{{ $message }}</div>
                              @enderror
                          </div>
-                          <div class="mb-3">
+                         <div class="mb-3">
                              <h3>Big Image</h3>
                              <img id="about_image_preview" style="display: block" src="" class="img-fluid">
-                              <input class="form-control" type="file" id="image" name="image">
+                             <input class="form-control" type="file" id="image" name="image">
                              @error('image')
                                  <div class="text-danger small mt-1">{{ $message }}</div>
                              @enderror

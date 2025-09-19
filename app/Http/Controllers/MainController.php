@@ -35,9 +35,16 @@ class MainController
             'title' => 'required|string',
             'sub_title' => 'required|string',
         ]);
+
         $main = Main::first();
+
+        if (!$main) {
+            $main = new Main();
+        }
+
         $main->title = $request->title;
         $main->sub_title = $request->sub_title;
+        $main->save();
 
         // if ($request->file('bc_img')) {
         //     $img_file = $request->file('bc_img');

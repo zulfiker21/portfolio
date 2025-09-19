@@ -8,9 +8,9 @@
                  <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                  <li class="breadcrumb-item active">List of Teams</li>
              </ol>
-              <form method="GET" action="{{ route('admin.teams.list') }}" class="mb-3">
+             <form method="GET" action="{{ route('admin.teams.list') }}" class="mb-3">
                  <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Search users..."
-                     style="width: 500px; padding: 10px; border: 1px solid #ccc;">
+                     style="padding: 10px; border: 1px solid #ccc;">
                  <button style="padding: 10px 20px; color: #464343ff; border: none; cursor: pointer;"
                      type="submit">Search</button>
              </form>
@@ -28,57 +28,51 @@
                  </div>
              @endif
              <div class="table-responsive">
-               <table class="table table-bordered">
-                 <thead>
-                     <tr>
-                         <th scope="col">#</th>
-                         <th scope="col">Title</th>
-                         <th scope="col">Sub-Title</th>
-                         <th scope="col">Image</th>
-                         <th scope="col">Facebook</th>
-                         <th scope="col">Twitter</th>
-                         <th scope="col">Linkedin</th>
-                         <th scope="col">Action</th>
-                     </tr>
-                 </thead>
-                 <tbody>
-                     @forelse ($teams as $team)
+                 <table class="table table-bordered">
+                     <thead>
                          <tr>
-                             <th scope="row">{{ $team->id }}</th>
-                             <td>{{ $team->title }}</td>
-                             <td>{{ $team->sub_title }}</td>
-                             <td>
-                                 @if ($team->image)
-                                     <img src="{{ asset($team->image) }}" alt="Team Image" width="50">
-                                 @else
-                                     N/A
-                                 @endif
-                             </td>
-                             <td>{{ Str::limit($team->facebook ?? 'N/A', 10) }}</td>
-                             <td>{{ Str::limit($team->twitter ?? 'N/A', 10) }}</td>
-                             <td>{{ Str::limit($team->linkedin ?? 'N/A', 10) }}</td>
-                             <td>
-                                 <div class="d-flex gap-2">
-                                     <a href="{{ route('admin.teams.edit', $team->id) }}"
-                                         class="btn btn-sm btn-primary">Edit</a>
-                                     <form action="{{ route('admin.teams.destroy', $team->id) }}" method="POST">
-                                         @csrf
-                                         @method('DELETE')
-                                         <button class="btn btn-sm btn-danger"
-                                             onclick="return confirm('Are you sure?')">Delete</button>
-                                     </form>
-                                 </div>
-                             </td>
+                             <th scope="col">#</th>
+                             <th scope="col">Title</th>
+                             <th scope="col">Sub-Title</th>
+                             <th scope="col">Image</th>
+                             <th scope="col">Action</th>
                          </tr>
-                     @empty
-                         <tr>
-                             <td colspan="8" class="text-center">No teams found.</td>
-                         </tr>
-                     @endforelse
+                     </thead>
+                     <tbody>
+                         @forelse ($teams as $team)
+                             <tr>
+                                 <th scope="row">{{ $team->id }}</th>
+                                 <td>{{ $team->title }}</td>
+                                 <td>{{ $team->sub_title }}</td>
+                                 <td>
+                                     @if ($team->image)
+                                         <img src="{{ asset($team->image) }}" alt="Team Image" width="50">
+                                     @else
+                                         N/A
+                                     @endif
+                                 </td>
+                                 <td>
+                                     <div class="d-flex gap-2">
+                                         <a href="{{ route('admin.teams.edit', $team->id) }}"
+                                             class="btn btn-sm btn-primary">Edit</a>
+                                         <form action="{{ route('admin.teams.destroy', $team->id) }}" method="POST">
+                                             @csrf
+                                             @method('DELETE')
+                                             <button class="btn btn-sm btn-danger"
+                                                 onclick="return confirm('Are you sure?')">Delete</button>
+                                         </form>
+                                     </div>
+                                 </td>
+                             </tr>
+                         @empty
+                             <tr>
+                                 <td colspan="8" class="text-center">No teams found.</td>
+                             </tr>
+                         @endforelse
 
 
-                 </tbody>
-             </table>
+                     </tbody>
+                 </table>
              </div>
      </main>
  @endsection

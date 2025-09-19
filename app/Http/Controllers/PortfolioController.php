@@ -8,13 +8,13 @@ use Illuminate\Http\Request;
 
 class PortfolioController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function list()
+    public function list(Request $request)
     {
-        $portfolios = Portfolio::all();
-        return view('backend.components.portfolios_list', compact('portfolios'));
+        $search = $request->input('search');
+        $portfolios = Portfolio::where('title', 'like', '%' . $search . '%')
+            ->orWhere('sub_title', 'like', '%' . $search . '%')
+            ->get();
+        return view('backend.components.portfolios_list', compact('portfolios', 'search'));
     }
 
     /**
