@@ -11,11 +11,15 @@ class AboutController
     /**
      * Display a listing of the resource.
      */
-    public function list()
+     public function list(Request $request)
     {
-        $abouts = About::all();
-        return view('backend.components.abouts_list', compact('abouts'));
+        $search = $request->input('search');   
+        $abouts = About::where('title', 'like', '%' . $search . '%')
+            ->orWhere('sub_title', 'like', '%' . $search . '%')
+                         ->orWhere('description', 'like', '%' . $search . '%') ->get();
+        return view('backend.components.abouts_list', compact('abouts', 'search'));
     }
+
 
 
     /**

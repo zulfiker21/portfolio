@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 
 class ContactController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function list()
+    public function list(Request $request)
     {
-        $contacts = Contact::all();
-        return view('backend.components.contacts_list', compact('contacts'));
+         $search = $request->input('search');
+        $contacts = Contact::where('name', 'like', '%' . $search . '%')
+            ->orWhere('email', 'like', '%' . $search . '%')
+            ->orWhere('phone', 'like', '%' . $search . '%')
+            ->get();
+        return view('backend.components.contacts_list', compact('contacts', 'search'));
     }
 
     /**

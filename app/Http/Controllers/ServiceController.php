@@ -8,11 +8,13 @@ use Illuminate\Http\Request;
 class ServiceController
 {
 
-    public function list()
+    public function list(Request $request)
     {
-        
-        $services = Service::all();
-        return view('backend.components.services_list', compact('services'));
+        $search = $request->input('search');
+        $services = Service::where('title', 'like', '%' . $search . '%')
+            ->orWhere('description', 'like', '%' . $search . '%')
+            ->get();
+        return view('backend.components.services_list', compact('services', 'search'));
     }
 
     public function create()

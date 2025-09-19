@@ -8,6 +8,12 @@
                  <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                  <li class="breadcrumb-item active">List of Abouts</li>
              </ol>
+             <form method="GET" action="{{ route('admin.abouts.list') }}" class="mb-3">
+                 <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Search users..."
+                     style="width: 500px; padding: 10px; border: 1px solid #ccc;">
+                 <button style="padding: 10px 20px; color: #464343ff; border: none; cursor: pointer;"
+                     type="submit">Search</button>
+             </form>
              @if (session('success'))
                  <div class="alert alert-success alert-dismissible fade show" role="alert">
                      {{ session('success') }}

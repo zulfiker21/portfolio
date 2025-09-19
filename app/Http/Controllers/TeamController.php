@@ -8,13 +8,13 @@ use Illuminate\Http\Request;
 
 class TeamController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function list()
+    public function list(Request $request)
     {
-        $teams =  Team::all();
-        return view('backend.components.teams_list', compact('teams'));
+        $search = $request->input('search');
+        $teams =  Team::where('title', 'like', '%' . $search . '%')
+            ->orWhere('sub_title', 'like', '%' . $search . '%')
+            ->get();
+        return view('backend.components.teams_list', compact('teams', 'search'));
     }
 
     /**
@@ -102,7 +102,6 @@ class TeamController
         $teams = Team::find($id);
         @unlink(public_path($teams->image));
         $teams->delete();
-
         return redirect()->route('admin.teams.list')->with('success', 'Team deleted!');
     }
 }
