@@ -50,18 +50,21 @@ class PortfolioController
         $portfolio->category = $request->category;
 
         // Big Image Upload
+        
         if ($request->hasFile('big_image')) {
-            $big_file = $request->file('big_image');
-            $big_path = $big_file->store('img', 'public');
-            $portfolio->big_image = 'storage/' . $big_path;
+            $img_file = $request->file('big_image');
+            $img_name = 'big_image.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name); // move to public/img
+            $portfolio->big_image = 'img/' . $img_name;
         }
 
-        // Small Image Upload
-        if ($request->hasFile('small_image')) {
-            $small_file = $request->file('small_image');
-            $small_path = $small_file->store('img', 'public');
-            $portfolio->small_image = 'storage/' . $small_path;
+          if ($request->hasFile('small_image')) {
+            $img_file = $request->file('small_image');
+            $img_name = 'small_image.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name); // move to public/img
+            $portfolio->small_image = 'img/' . $img_name;
         }
+
 
         // Save to database
         $portfolio->save();
