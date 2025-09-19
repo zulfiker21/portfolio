@@ -34,6 +34,8 @@ class MainController
         $validated = $request->validate([
             'title' => 'required|string',
             'sub_title' => 'required|string',
+            'bc_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'resume' => 'nullable|mimes:pdf|max:10000',
         ]);
 
         $main = Main::first();
