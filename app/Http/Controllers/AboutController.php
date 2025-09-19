@@ -41,7 +41,7 @@ class AboutController
             'title' => 'required|string|max:255',
             'sub_title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Create new About
@@ -92,8 +92,8 @@ class AboutController
     public function destroy($id)
     {
         $abouts = About::find($id);
-        @unlink(public_path($abouts->big_image));
-        @unlink(public_path($abouts->small_image));
+        @unlink(public_path($abouts->image));
+        @unlink(public_path($abouts->image));
         $abouts->delete();
 
         return redirect()->route('admin.abouts.list')->with('success', 'Abouts deleted!');
