@@ -27,7 +27,8 @@
                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                  </div>
              @endif
-             <table class="table table-bordered">
+             <div class="table-responsive">
+               <table class="table table-bordered">
                  <thead>
                      <tr>
                          <th scope="col">#</th>
@@ -78,5 +79,6 @@
 
                  </tbody>
              </table>
+             </div>
      </main>
  @endsection
