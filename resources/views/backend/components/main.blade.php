@@ -21,7 +21,7 @@
                      <div class="form-group col-md-4 mt-3">
                          <div class="mb-3">
                              <label for="title">
-                                 <h4>{{ $main?->title ?? 'Title' }}</h4>
+                                 <h4>Title</h4>
                              </label>
 
                              <input type="text" class="form-control" id="title" name="title"
@@ -29,7 +29,7 @@
                          </div>
                          <div class="mb-5">
                              <label for="sub_title">
-                                 <h4>{{ $main?->sub_title ?? 'Sub Title' }}</h4>
+                                 <h4>Sub Title</h4>
                              </label>
                              <input type="text" class="form-control" id="sub_title" name="sub_title"
                                  value="{{ $main?->sub_title ?? '' }}">
