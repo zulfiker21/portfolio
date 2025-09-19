@@ -107,7 +107,7 @@ class PortfolioController
             'big_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'small_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
         ]);
-        $portfolios = Portfolio::find($id);
+        $portfolios = Portfolio::findOrFail($id);
         $portfolios->title = $request->title;
         $portfolios->sub_title = $request->sub_title;
         $portfolios->description = $request->description;
