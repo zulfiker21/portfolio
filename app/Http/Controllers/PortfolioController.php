@@ -105,18 +105,20 @@ class PortfolioController
         $portfolios->description = $request->description;
         $portfolios->client = $request->client;
         $portfolios->category = $request->category;
-
-        if ($request->file('big_image')) {
-            $big_file = $request->file('big_image');
-            Storage::putFile('public/img/', $big_file);
-            $portfolios->big_image = "storage/img/" . $big_file->hashName();
+  if ($request->hasFile('big_image')) {
+            $img_file = $request->file('big_image');
+            $img_name = 'big_image.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name); // move to public/img
+            $portfolios->big_image = 'img/' . $img_name;
         }
 
-        if ($request->file('small_image')) {
-            $small_file = $request->file('small_image');
-            Storage::putFile('public/img/', $small_file);
-            $portfolios->small_image = "storage/img/" . $small_file->hashName();
+          if ($request->hasFile('small_image')) {
+            $img_file = $request->file('small_image');
+            $img_name = 'small_image.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name); // move to public/img
+            $portfolios->small_image = 'img/' . $img_name;
         }
+
 
         $portfolios->save();
 
