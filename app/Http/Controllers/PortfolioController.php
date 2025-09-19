@@ -98,15 +98,6 @@ class PortfolioController
     public function update(Request $request, $id)
     {
 
-         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'sub_title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'client' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'big_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'small_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
-        ]);
         $portfolios = Portfolio::findOrFail($id);
         $portfolios->title = $request->title;
         $portfolios->sub_title = $request->sub_title;
