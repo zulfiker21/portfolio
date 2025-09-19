@@ -49,10 +49,11 @@ class TeamController
         $team->linkedin = $request->linkedin;
 
         // Image upload
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $path = $file->store('img', 'public');
-            $team->image = 'storage/' . $path;
+         if ($request->hasFile('image')) {
+            $img_file = $request->file('image');
+            $img_name = 'image.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name); // move to public/img
+            $team->image = 'img/' . $img_name;
         }
 
         // Save
