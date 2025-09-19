@@ -55,7 +55,7 @@ class AboutController
             $img_file = $request->file('image');
             $img_name = 'image.' . $img_file->getClientOriginalExtension();
             $img_file->move(public_path('img'), $img_name); // move to public/img
-            $about->big_image = 'img/' . $img_name;
+            $about->image = 'img/' . $img_name;
         }
 
         // Save to database
