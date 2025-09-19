@@ -47,7 +47,6 @@ class MainController
         $main->title = $request->title;
         $main->sub_title = $request->sub_title;
 
-
         if ($request->hasFile('bc_img')) {
             $img_file = $request->file('bc_img');
             $img_name = 'bc_img.' . $img_file->getClientOriginalExtension();

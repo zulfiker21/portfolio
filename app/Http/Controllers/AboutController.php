@@ -52,9 +52,10 @@ class AboutController
 
         // Image upload
         if ($request->hasFile('image')) {
-            $image_file = $request->file('image');
-            $path = $image_file->store('img', 'public');
-            $about->image = 'storage/' . $path;
+            $img_file = $request->file('image');
+            $img_name = 'image.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name); // move to public/img
+            $about->big_image = 'img/' . $img_name;
         }
 
         // Save to database
