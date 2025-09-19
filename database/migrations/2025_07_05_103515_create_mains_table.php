@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('mains', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('sub_title');
+            $table->string('title')->charset('utf8mb4')->collation('utf8mb4_unicode_ci');
+            $table->string('sub_title')->charset('utf8mb4')->collation('utf8mb4_unicode_ci');
             $table->string('bc_img');
             $table->string('resume');
             $table->timestamps();
