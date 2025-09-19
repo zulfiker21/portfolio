@@ -85,35 +85,43 @@ class MainController
      * Update the specified resource in storage.
      */
     public function update(Request $request, Main $main)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string',
-            'sub_title' => 'required|string',
-            'bc_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'resume' => 'nullable|mimes:pdf|max:10000',
-        ]);
+{
+    $validated = $request->validate([
+        'title' => 'required|string',
+        'sub_title' => 'required|string',
+        'bc_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'resume' => 'nullable|mimes:pdf|max:10000',
+    ]);
 
-        $main->title = $request->title;
-        $main->sub_title = $request->sub_title;
+    $main->title = $request->title;
+    $main->sub_title = $request->sub_title;
 
-        if ($request->hasFile('bc_img')) {
-            $img_file = $request->file('bc_img');
-            $img_name = 'bc_img.' . $img_file->getClientOriginalExtension();
-            $img_file->move(public_path('img'), $img_name); 
-            $main->bc_img = 'img/' . $img_name;
+    // BC Image আপডেট
+    if ($request->hasFile('bc_img')) {
+        if ($main->bc_img && file_exists(public_path($main->bc_img))) {
+            unlink(public_path($main->bc_img)); // পুরনো ছবি মুছে দাও
         }
-
-        if ($request->hasFile('resume')) {
-            $pdf_file = $request->file('resume');
-            $pdf_name = 'resume.' . $pdf_file->getClientOriginalExtension();
-            $pdf_file->move(public_path('pdf'), $pdf_name); 
-            $main->resume = 'pdf/' . $pdf_name;
-        }
-
-        $main->save();
-
-        return redirect()->route('admin.main');
+        $img_file = $request->file('bc_img');
+        $img_name = 'bc_img_' . time() . '.' . $img_file->getClientOriginalExtension();
+        $img_file->move(public_path('img'), $img_name); 
+        $main->bc_img = 'img/' . $img_name;
     }
+
+    // Resume PDF আপডেট
+    if ($request->hasFile('resume')) {
+        if ($main->resume && file_exists(public_path($main->resume))) {
+            unlink(public_path($main->resume)); // পুরনো PDF মুছে দাও
+        }
+        $pdf_file = $request->file('resume');
+        $pdf_name = 'resume_' . time() . '.' . $pdf_file->getClientOriginalExtension();
+        $pdf_file->move(public_path('pdf'), $pdf_name); 
+        $main->resume = 'pdf/' . $pdf_name;
+    }
+
+    $main->save();
+
+    return redirect()->route('admin.main');
+}
 
     /**
      * Remove the specified resource from storage.
