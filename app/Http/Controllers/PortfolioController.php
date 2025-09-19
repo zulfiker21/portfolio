@@ -30,7 +30,6 @@ class PortfolioController
      */
     public function store(Request $request)
     {
-        // Validation
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'sub_title' => 'required|string|max:255',
@@ -41,7 +40,6 @@ class PortfolioController
             'small_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
         ]);
 
-        // Create new Portfolio
         $portfolio = new Portfolio;
         $portfolio->title = $request->title;
         $portfolio->sub_title = $request->sub_title;
@@ -50,29 +48,26 @@ class PortfolioController
         $portfolio->category = $request->category;
 
         // Big Image Upload
-        
         if ($request->hasFile('big_image')) {
             $img_file = $request->file('big_image');
-            $img_name = 'big_image.' . $img_file->getClientOriginalExtension();
-            $img_file->move(public_path('img'), $img_name); // move to public/img
+            $img_name = time() . '_big.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name);
             $portfolio->big_image = 'img/' . $img_name;
         }
 
-          if ($request->hasFile('small_image')) {
+        // Small Image Upload
+        if ($request->hasFile('small_image')) {
             $img_file = $request->file('small_image');
-            $img_name = 'small_image.' . $img_file->getClientOriginalExtension();
-            $img_file->move(public_path('img'), $img_name); // move to public/img
+            $img_name = time() . '_small.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name);
             $portfolio->small_image = 'img/' . $img_name;
         }
 
-
-        // Save to database
         $portfolio->save();
 
-        // Redirect with success message
-        return redirect()->route('admin.portfolios.create')
-            ->with('success', 'Portfolio created successfully.');
+        return redirect()->route('admin.portfolios.list')->with('success', 'Portfolio created successfully.');
     }
+
 
 
     /**
@@ -97,32 +92,41 @@ class PortfolioController
      */
     public function update(Request $request, $id)
     {
+        $portfolio = Portfolio::findOrFail($id);
 
-        $portfolios = Portfolio::findOrFail($id);
-        $portfolios->title = $request->title;
-        $portfolios->sub_title = $request->sub_title;
-        $portfolios->description = $request->description;
-        $portfolios->client = $request->client;
-        $portfolios->category = $request->category;
-  if ($request->hasFile('big_image')) {
+        $portfolio->title = $request->title;
+        $portfolio->sub_title = $request->sub_title;
+        $portfolio->description = $request->description;
+        $portfolio->client = $request->client;
+        $portfolio->category = $request->category;
+
+        // Big Image Update
+        if ($request->hasFile('big_image')) {
+            if ($portfolio->big_image && file_exists(public_path($portfolio->big_image))) {
+                unlink(public_path($portfolio->big_image));
+            }
             $img_file = $request->file('big_image');
-            $img_name = 'big_image.' . $img_file->getClientOriginalExtension();
-            $img_file->move(public_path('img'), $img_name); // move to public/img
-            $portfolios->big_image = 'img/' . $img_name;
+            $img_name = time() . '_big.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name);
+            $portfolio->big_image = 'img/' . $img_name;
         }
 
-          if ($request->hasFile('small_image')) {
+        // Small Image Update
+        if ($request->hasFile('small_image')) {
+            if ($portfolio->small_image && file_exists(public_path($portfolio->small_image))) {
+                unlink(public_path($portfolio->small_image));
+            }
             $img_file = $request->file('small_image');
-            $img_name = 'small_image.' . $img_file->getClientOriginalExtension();
-            $img_file->move(public_path('img'), $img_name); // move to public/img
-            $portfolios->small_image = 'img/' . $img_name;
+            $img_name = time() . '_small.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name);
+            $portfolio->small_image = 'img/' . $img_name;
         }
 
-
-        $portfolios->save();
+        $portfolio->save();
 
         return redirect()->route('admin.portfolios.list')->with('success', 'Portfolio updated successfully.');
     }
+
 
 
     /**
@@ -130,10 +134,16 @@ class PortfolioController
      */
     public function destroy($id)
     {
-        $portfolios = Portfolio::find($id);
-        @unlink(public_path($portfolios->big_image));
-        @unlink(public_path($portfolios->small_image));
-        $portfolios->delete();
+        $portfolio = Portfolio::find($id);
+
+        if ($portfolio->big_image && file_exists(public_path($portfolio->big_image))) {
+            unlink(public_path($portfolio->big_image));
+        }
+        if ($portfolio->small_image && file_exists(public_path($portfolio->small_image))) {
+            unlink(public_path($portfolio->small_image));
+        }
+
+        $portfolio->delete();
 
         return redirect()->route('admin.portfolios.list')->with('success', 'Portfolio deleted!');
     }

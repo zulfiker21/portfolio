@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
 use App\Models\Team;
 use Illuminate\Http\Request;
 
@@ -11,9 +10,10 @@ class TeamController
     public function list(Request $request)
     {
         $search = $request->input('search');
-        $teams =  Team::where('title', 'like', '%' . $search . '%')
+        $teams = Team::where('title', 'like', '%' . $search . '%')
             ->orWhere('sub_title', 'like', '%' . $search . '%')
             ->get();
+
         return view('backend.components.teams_list', compact('teams', 'search'));
     }
 
@@ -48,26 +48,27 @@ class TeamController
         $team->facebook = $request->facebook;
         $team->linkedin = $request->linkedin;
 
-        // Image upload
-         if ($request->hasFile('image')) {
+        // Image Upload
+        if ($request->hasFile('image')) {
             $img_file = $request->file('image');
-            $img_name = 'image.' . $img_file->getClientOriginalExtension();
-            $img_file->move(public_path('img'), $img_name); // move to public/img
+            $img_name = time() . '_team.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name);
             $team->image = 'img/' . $img_name;
         }
 
         // Save
         $team->save();
 
-        // Redirect with success message
-        return redirect()->route('admin.teams.create')
+        return redirect()->route('admin.teams.list')
             ->with('success', 'Team member created successfully.');
     }
 
-
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit($id)
     {
-        $teams = Team::find($id);
+        $teams = Team::findOrFail($id);
         return view('backend.components.teams_edit', compact('teams'));
     }
 
@@ -76,33 +77,47 @@ class TeamController
      */
     public function update(Request $request, $id)
     {
+        $teams = Team::findOrFail($id);
 
-        $teams =  Team::find($id);
         $teams->title = $request->title;
         $teams->sub_title = $request->sub_title;
         $teams->twitter = $request->twitter;
         $teams->facebook = $request->facebook;
         $teams->linkedin = $request->linkedin;
 
+        // Image Update
         if ($request->hasFile('image')) {
-            $big_file = $request->file('image');
-            $path = $big_file->store('img', 'public');
-            $teams->image = 'storage/' . $path;
+            // পুরোনো image delete
+            if ($teams->image && file_exists(public_path($teams->image))) {
+                unlink(public_path($teams->image));
+            }
+
+            $img_file = $request->file('image');
+            $img_name = time() . '_team.' . $img_file->getClientOriginalExtension();
+            $img_file->move(public_path('img'), $img_name);
+            $teams->image = 'img/' . $img_name;
         }
 
         $teams->save();
-        return redirect()->route('admin.teams.list')->with('success', 'Team member updated successfully.');
-    }
 
+        return redirect()->route('admin.teams.list')
+            ->with('success', 'Team member updated successfully.');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        $teams = Team::find($id);
-        @unlink(public_path($teams->image));
+        $teams = Team::findOrFail($id);
+
+        if ($teams->image && file_exists(public_path($teams->image))) {
+            unlink(public_path($teams->image));
+        }
+
         $teams->delete();
-        return redirect()->route('admin.teams.list')->with('success', 'Team deleted!');
+
+        return redirect()->route('admin.teams.list')
+            ->with('success', 'Team deleted!');
     }
 }
