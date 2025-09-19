@@ -37,8 +37,8 @@ class PortfolioController
             'description' => 'required|string',
             'client' => 'required|string|max:255',
             'category' => 'required|string|max:255',
-            'big_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'small_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:1024',
+            'big_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'small_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
         ]);
 
         // Create new Portfolio
